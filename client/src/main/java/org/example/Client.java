@@ -13,19 +13,9 @@ public class Client {
     private Logger log = Logger.getInstance();
     private static String logMessage;
 
-    public Client() throws IOException {
+    public Client(String name) throws IOException {
         try {
-            Scanner scanner1 = new Scanner(new File("settings.txt"));
-            int port = Integer.parseInt(scanner1.nextLine());
-            String ip = scanner1.nextLine();
-            scanner1.close();
-            clientSocket = new Socket(ip, port);
-            reader = new BufferedReader(new InputStreamReader(System.in));
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-
-            System.out.println("Введите имя:");
-            name = reader.readLine();
+            this.name = name;
             logMessage = "Клиент " + name + " зашел в чат";
             log.logging(logMessage);
             System.out.println(logMessage);
@@ -37,7 +27,43 @@ public class Client {
         }
     }
 
-    private void close() throws IOException {
+    private static String setName() {
+        String s = "";
+        System.out.println("Введите имя:");
+        try {
+            s = reader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return s;
+    }
+
+    public static void main(String[] args) {
+        String name;
+        Scanner scanner;
+        try {
+            scanner = new Scanner(new File("settings.txt"));
+            int port = Integer.parseInt(scanner.nextLine());
+            String ip = scanner.nextLine();
+            scanner.close();
+            reader = new BufferedReader(new InputStreamReader(System.in));
+            name = setName();
+            if (!name.contains("/exit")) {
+                try {
+                    clientSocket = new Socket(ip, port);
+                    in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+                    new Client(name);
+                } catch (IOException e) {
+                    System.err.println(e);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println(e);
+        }
+    }
+
+    private static void close() throws IOException {
         if (!clientSocket.isClosed()) {
             clientSocket.close();
             in.close();
@@ -60,6 +86,11 @@ public class Client {
                     log.logging(logMessage);
                 }
             } catch (IOException e) {
+                try {
+                    close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 @startuml
 
-title __CLIENT's Class Diagram__\n
+title __EXAMPLE's Class Diagram__\n
 
   namespace org.example {
     class org.example.Client {
@@ -11,7 +11,9 @@ title __CLIENT's Class Diagram__\n
         {static} - out : BufferedWriter
         {static} - reader : BufferedReader
         + Client()
-        - close()
+        {static} + main()
+        {static} - close()
+        {static} - setName()
     }
   }
   
@@ -26,20 +28,6 @@ title __CLIENT's Class Diagram__\n
   namespace org.example {
     class org.example.Client.WriteMessage {
         + run()
-    }
-  }
-  
-
-  namespace org.example {
-    class org.example.Client1Run {
-        {static} + main()
-    }
-  }
-  
-
-  namespace org.example {
-    class org.example.Client2Run {
-        {static} + main()
     }
   }
   

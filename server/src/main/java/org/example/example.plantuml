@@ -1,6 +1,6 @@
 @startuml
 
-title __SERVER's Class Diagram__\n
+title __EXAMPLE's Class Diagram__\n
 
   namespace org.example {
     class org.example.Logger {
